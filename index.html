@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Basic Webpage – Assignment 8</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: Arial, Helvetica, sans-serif; line-height: 1.6; }
+
+    /* NAV */
+    nav { background: #222; }
+    nav ul.menu { list-style: none; display: flex; flex-wrap: wrap; }
+    nav ul.menu > li { position: relative; }
+    nav ul.menu a,
+    nav ul.menu button {
+      color: #fff;
+      padding: 1rem 1.25rem;
+      text-decoration: none;
+      display: block;
+      background: none;
+      border: none;
+      font: inherit;
+      cursor: pointer;
+    }
+    ul.submenu {
+      display: none;
+      position: absolute;
+      left: 0;
+      top: 100%;
+      background: #333;
+      list-style: none;
+      min-width: 220px;
+      z-index: 10;
+    }
+    nav ul.menu li:hover > ul.submenu { display: block; }
+    ul.submenu a, ul.submenu button { padding: .75rem 1rem; }
+
+    /* SECTIONS */
+    section { padding: 2rem 1rem; max-width: 900px; margin: auto; }
+    h2 { margin-bottom: .5rem; }
+
+    /* Browser output */
+    #browser-output ul { margin-top: 1rem; padding-left: 1.25rem; }
+    #browser-output li { margin: .25rem 0; }
+
+    /* Password checker */
+    #pwd { padding: .5rem; font-size: 1rem; border: 2px solid #ccc; border-radius: 4px; max-width: 260px; width: 100%; }
+    #pwd.valid { border-color: #28a745; }
+    #pwd.invalid { border-color: #dc3545; }
+    #pwd-msg { margin-top: .25rem; font-size: .9rem; }
+
+    /* Mobile tweak */
+    @media (max-width: 600px) {
+      nav ul.menu { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+  <!-- NAVIGATION BAR -->
+  <nav>
+    <ul class="menu">
+      <li><a href="#">Course ▾</a>
+        <ul class="submenu">
+          <li><a href="https://gaia.cs.umass.edu/kurose_ross/index.php" target="_blank" rel="noopener">Kurose & Ross</a></li>
+          <li><a href="https://www.w3schools.com" target="_blank" rel="noopener">W3Schools</a></li>
+          <li><a href="https://www.geeksforgeeks.org/web-development/" target="_blank" rel="noopener">GeeksforGeeks</a></li>
+        </ul>
+      </li>
+
+      <li><a href="#">Browser ▾</a>
+        <ul class="submenu">
+          <li><button onclick="showNavigator()">Navigator</button></li>
+          <li><button onclick="showWindow()">Window</button></li>
+          <li><button onclick="showScreen()">Screen</button></li>
+          <li><button onclick="showLocation()">Location</button></li>
+        </ul>
+      </li>
+
+      <li><a href="#">Configuration ▾</a>
+        <ul class="submenu">
+          <li><a href="#password-section">Password</a></li>
+        </ul>
+      </li>
+
+      <li><a href="#">About ▾</a>
+        <ul class="submenu">
+          <li><a href="#about-section">Developer</a></li>
+          <li><a href="#contact-section">Contact Me</a></li>
+        </ul>
+      </li>
+    </ul>
+  </nav>
+
+  <!-- MAIN CONTENT -->
+  <main>
+    <section id="browser-output">
+      <h2>Browser Information</h2>
+      <p>Choose an item from the <strong>Browser</strong> menu to display details here.</p>
+    </section>
+
+    <section id="password-section">
+      <h2>Password Checker</h2>
+      <input type="password" id="pwd" placeholder="Enter password" onkeyup="validatePwd(this.value)" />
+      <p id="pwd-msg"></p>
+    </section>
+
+    <section id="about-section">
+      <h2>About the Developer</h2>
+      <p>Hello! I’m <em>William Pineda‑Capilla</em>, a computer‑science student at Queens College focusing on networking and web development. Welcome to my assignment&nbsp;8 demo page.</p>
+      <!-- Optional photo line left commented out on purpose -->
+      <!-- <img src="assets/me.jpg" alt="Photo of Developer" style="max-width:200px;border-radius:50%"> -->
+    </section>
+
+    <section id="contact-section">
+      <h2>Contact Me</h2>
+      <form action="mailto:williampc1917@gmail.com" method="post" enctype="text/plain">
+        <label>Name: <input type="text" name="name" required /></label><br /><br />
+        <label>E‑mail: <input type="email" name="mail" required /></label><br /><br />
+        <label>Comment:<br />
+          <textarea name="comment" rows="4" cols="40"></textarea>
+        </label><br /><br />
+        <input type="submit" value="Send" />
+      </form>
+    </section>
+  </main>
+
+  <script>
+    /* UTILITIES */
+    const out = document.getElementById('browser-output');
+    function print(obj, title) {
+      let html = `<h2>${title}</h2><ul>`;
+      for (const [k, v] of Object.entries(obj)) {
+        html += `<li><strong>${k}</strong>: ${v}</li>`;
+      }
+      html += '</ul>';
+      out.innerHTML = html;
+    }
+
+    /* BROWSER INFO HANDLERS */
+    function showNavigator() {
+      const n = navigator;
+      print({
+        appName: n.appName,
+        product: n.product,
+        appVersion: n.appVersion,
+        userAgent: n.userAgent,
+        platform: n.platform,
+        language: n.language,
+      }, 'Navigator');
+    }
+    function showWindow() {
+      print({
+        innerHeight: window.innerHeight,
+        innerWidth: window.innerWidth,
+      }, 'Window');
+    }
+    function showScreen() {
+      const s = screen;
+      print({
+        width: s.width,
+        height: s.height,
+        availWidth: s.availWidth,
+        availHeight: s.availHeight,
+        colorDepth: s.colorDepth,
+        pixelDepth: s.pixelDepth,
+      }, 'Screen');
+    }
+    function showLocation() {
+      const l = location;
+      print({
+        href: l.href,
+        hostname: l.hostname,
+        pathname: l.pathname,
+        protocol: l.protocol,
+      }, 'Location');
+    }
+
+    /* PASSWORD VALIDATION */
+    const pwdInput = document.getElementById('pwd');
+    const pwdMsg   = document.getElementById('pwd-msg');
+    // ≥10 chars, at least 1 letter, 1 digit, 1 symbol
+    const re = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!-/:-@\[-`{-~]).{10,}$/;
+    function validatePwd(str) {
+      if (re.test(str)) {
+        pwdInput.className = 'valid';
+        pwdMsg.textContent = 'Strong password ✔️';
+        pwdMsg.style.color = '#28a745';
+      } else {
+        pwdInput.className = 'invalid';
+        pwdMsg.textContent = 'Password must be ≥10 chars and include a letter, digit & symbol';
+        pwdMsg.style.color = '#dc3545';
+      }
+    }
+  </script>
+</body>
+</html>
